@@ -5,19 +5,20 @@ import Card from './components/Card';
 function App() {
   const [turns, setTurns] = useState(0);
   const [cards, setCards] = useState([
-    { name: 'helmet-1', id: 1, isFliped: true },
-    { name: 'helmet-1', id: 2, isFliped: true },
-    { name: 'potion-1', id: 3, isFliped: true },
-    { name: 'potion-1', id: 4, isFliped: true },
-    { name: 'ring-1', id: 5, isFliped: true },
-    { name: 'ring-1', id: 6, isFliped: true },
-    { name: 'scroll-1', id: 7, isFliped: true },
-    { name: 'scroll-1', id: 8, isFliped: true },
-    { name: 'shield-1', id: 9, isFliped: true },
-    { name: 'shield-1', id: 10, isFliped: true },
-    { name: 'sword-1', id: 11, isFliped: true },
-    { name: 'sword-1', id: 12, isFliped: true }
+    { name: 'helmet-1', id: 0, isFliped: false, match: false },
+    { name: 'helmet-1', id: 12, isFliped: false, match: false },
+    { name: 'potion-1', id: 1, isFliped: false, match: false },
+    { name: 'potion-1', id: 11, isFliped: false, match: false },
+    { name: 'ring-1', id: 10, isFliped: false, match: false },
+    { name: 'ring-1', id: 2, isFliped: false, match: false },
+    { name: 'scroll-1', id: 9, isFliped: false, match: false },
+    { name: 'scroll-1', id: 3, isFliped: false, match: false },
+    { name: 'shield-1', id: 8, isFliped: false, match: false },
+    { name: 'shield-1', id: 4, isFliped: false, match: false },
+    { name: 'sword-1', id: 7, isFliped: false, match: false },
+    { name: 'sword-1', id: 5, isFliped: false, match: false }
   ]);
+  console.log('comp');
 
   const reOrder = () => {
     const newOrder = [];
@@ -38,20 +39,64 @@ function App() {
     reOrder();
   }, []);
 
-  const clickHandle = (id) => {
-    setCards((prevState) => {
-      return prevState.map(card => {
-        // console.log(card);
-        if (card.id === id) {
-          card.isFliped = false;
-          // console.log('match!!!', card);
+  useEffect(() => {
+    const isMatch = () => {
+      console.log('isMatch');
+      const floped = cards.filter(card => card.isFliped && !card.match);
+      if (floped.length === 2) {
+        if (floped[0].id + floped[1].id === 12) {
+          console.log('match !', floped);
+          floped.forEach(card => card.match = true);
+          // setCards(prevState => [...prevState]);
+          setTurns(prevState => prevState + 1);
         }
-        return card;
-      });
+        else {
+          console.log('no match !!', floped);
+          setTurns(prevState => prevState + 1);
+          setTimeout(() => {
+            floped.forEach(card => card.isFliped = false);
+            setCards(prevState => [...prevState]);
+          }, 1500);
+        }
+      }
+      else {
+        console.log('fliped card < 2\n--------------------------');
+      }
+    }
+
+    isMatch();
+  }, [cards]);
+
+
+  const flipCard = (id) => {
+    setCards((prevState) => {
+      const card = prevState.find(card => card.id === id);
+      // console.log(card);
+      card.isFliped = true;
+      return [...prevState];
     });
+  };
+
+
+  const clickHandle = (id) => {
+    flipCard(id);
   }
 
 
+
+
+  const newGameHandle = () => {
+    reOrder();
+    setTurns(0);
+    setCards(prevState => {
+      prevState.map(card => {
+        console.log(card);
+        card.isFliped = false;
+        card.match = false;
+      })
+      return [...prevState];
+    });
+  }
   // clickhandle
   // flip card
   // flip card
@@ -67,7 +112,7 @@ function App() {
   return (
     <div className="App">
       <h1>Magic Game</h1>
-      <button onClick={reOrder}>New Game</button>
+      <button onClick={newGameHandle}>New Game</button>
       {
         cards.map(card => (
           <div
