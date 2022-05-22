@@ -39,23 +39,6 @@ function App() {
       console.log(prevState);
       return [...prevState];
     });
-
-    // console.log(rands);
-    // console.log('rands:', rands);
-
-    // *********************************************
-    // const newOrder = [];
-    // const rands = [];
-    // while (newOrder.length !== 12) {
-    //   const num = Math.round(Math.random() * 11);
-    //   if (!rands.includes(num)) {
-    //     rands.push(num);
-    //     newOrder.push(cards[num]);
-    //   }
-    // }
-    // // console.log(rands);
-    // console.log('newOrder:', newOrder);
-    // setCards(newOrder);
   }
 
   useEffect(() => {
@@ -79,7 +62,7 @@ function App() {
           setTimeout(() => {
             floped.forEach(card => card.isFliped = false);
             setCards(prevState => [...prevState]);
-          }, 400);
+          }, 1000);
         }
       }
       else {
@@ -116,17 +99,6 @@ function App() {
       })
     });
   }
-  // clickhandle
-  // flip card
-  // flip card
-  // check for match
-  // match ? stay flip : unflip
-  // update turn
-
-  // name game
-  // reorder cards
-  // unfliped cards
-  // reset turn
 
   return (
     <div className="App">
@@ -134,12 +106,7 @@ function App() {
       <button onClick={newGameHandle}>New Game</button>
       {
         cards.map(card => (
-          <div
-            style={{ display: 'inline-block', border: '1px solid black', margin: '1px' }}
-            key={card.id}>
-            <p>{`${card.name}, ${card.id}, ${card.isFliped}`}</p>
-            <Card clickHandle={clickHandle} card={card} />
-          </div>
+          <Card clickHandle={clickHandle} card={card} key={card.id} />
         ))
       }
       <h4>Turns: {turns}</h4>
