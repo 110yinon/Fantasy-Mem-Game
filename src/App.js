@@ -4,6 +4,7 @@ import Card from './components/Card';
 
 function App() {
   const [turns, setTurns] = useState(0);
+  const [disabled, setDisabled] = useState(false);
   const [cards, setCards] = useState([
     { name: 'helmet-1', id: 0, isFliped: false, match: false },
     { name: 'helmet-1', id: 1, isFliped: false, match: false },
@@ -35,7 +36,7 @@ function App() {
         // console.log(card);
         prevState.unshift(card);
       });
-      rands.forEach(()=>prevState.pop());
+      rands.forEach(() => prevState.pop());
       console.log(prevState);
       return [...prevState];
     });
@@ -50,11 +51,13 @@ function App() {
       console.log('isMatch');
       const floped = cards.filter(card => card.isFliped && !card.match);
       if (floped.length === 2) {
+        setDisabled(true);
         if (floped[0].name === floped[1].name) {
           console.log('match !', floped);
           floped.forEach(card => card.match = true);
           // setCards(prevState => [...prevState]);
           setTurns(prevState => prevState + 1);
+          setDisabled(false);
         }
         else {
           console.log('no match !!', floped);
@@ -62,6 +65,7 @@ function App() {
           setTimeout(() => {
             floped.forEach(card => card.isFliped = false);
             setCards(prevState => [...prevState]);
+            setDisabled(false);
           }, 1000);
         }
       }
@@ -84,7 +88,9 @@ function App() {
   };
 
   const clickHandle = (id) => {
-    flipCard(id);
+    if (!disabled) {
+      flipCard(id);
+    }
   }
 
   const newGameHandle = () => {
